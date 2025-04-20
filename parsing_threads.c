@@ -1,5 +1,8 @@
 #include "philo.h"
-
+long get_time()
+{
+	
+}
 void creat_piholosophers(t_data *data)
 {
 	int i;

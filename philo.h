@@ -25,7 +25,7 @@ typedef struct s_data
 	int number_of_times_each_philosopher_must_eat;
 	int flag;
 	pthread_mutex_t *forks;
-	pthread_mutex_t print_eat;
+	pthread_mutex_t print;
 	t_philo *philosophers;
 }t_data;
 
