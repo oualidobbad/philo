@@ -6,10 +6,10 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME) clean
 
 $(NAME): $(OBJS)
-	cc -o $(NAME) $^
+	@cc -o $(NAME) $^
 
 clean:
-	rm -rf $(OBJS)
+	@rm -rf $(OBJS)
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 re: fclean all
