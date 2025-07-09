@@ -15,8 +15,9 @@ typedef struct s_philo
 	int				id;
 	long			last_time_to_eat;
 	pthread_mutex_t wait;
-	pthread_mutex_t	forks_left;
-	pthread_mutex_t	forks_right;
+	pthread_mutex_t check;
+	pthread_mutex_t	*forks_left;
+	pthread_mutex_t	*forks_right;
 	struct s_data	*data;
 }					t_philo;
 
@@ -30,11 +31,12 @@ typedef struct s_data
 	int				flag;
 	long			start_sumilation;
 	bool			is_died;
-	pthread_mutex_t	*forks;
+	pthread_mutex_t check_died;
 	pthread_mutex_t	print;
+	pthread_mutex_t	*forks;
 	t_philo			*philosophers;
 }					t_data;
-void    *routine_check_died(void *arg);
+void    			*monitoring(void *arg);
 long				ft_atoi(char *nb, int *flag);
 long				get_tm(void);
 void				*routine(void *arg);
@@ -42,4 +44,5 @@ void				all_free(t_data *data);
 void				creat_phiolosophers(t_data *data);
 int					parse_data(t_data *data, char **av);
 void				init_data_of_philo(t_data *data);
+void 				print_stat(char *str, t_philo *philo);
 #endif

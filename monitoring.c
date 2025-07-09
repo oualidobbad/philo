@@ -1,11 +1,12 @@
 #include "philo.h"
+// RED \e[1;5;31m
+// OFF \e[m
 bool ft_is_died(t_data *data)
 {
     int i;
     long time_last_meal;
 
     i = 0;
-    time_last_meal = 0;
     while (i < data->number_of_philosophers)
     {
         pthread_mutex_lock(&data->philosophers[i].wait);
@@ -13,16 +14,18 @@ bool ft_is_died(t_data *data)
         pthread_mutex_unlock(&data->philosophers[i].wait);
         if (data->time_to_die < time_last_meal)
         {
-            pthread_mutex_lock(&data->print);
-            printf ("philo %d is died\n", data->philosophers[i].id); 
-            pthread_mutex_unlock(&data->print);
+            print_stat("%ld %d died\n", &data->philosophers[i]);
+            pthread_mutex_lock(&data->check_died);
+            data->is_died = true;
+            pthread_mutex_unlock(&data->check_died);
             return true;
         }
         i++;
     }
     return false;
 }
-void    *routine_check_died(void *arg)
+
+void    *monitoring(void *arg)
 {
     t_data *data;
 
@@ -31,10 +34,9 @@ void    *routine_check_died(void *arg)
     {
         if (ft_is_died(data) == true)
         {
-            data->is_died = true;
             return NULL;
         }
-
+        usleep(1000);
     }
     return NULL;
 }

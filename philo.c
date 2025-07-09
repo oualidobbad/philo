@@ -9,10 +9,12 @@ void	all_free(t_data *data)
 	while (i < data->number_of_philosophers)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
-		pthread_mutex_destroy(&data->philosophers[i].forks_left);
-		pthread_mutex_destroy(&data->philosophers[i].forks_right);
+		pthread_mutex_destroy(&data->philosophers[i].wait);
+		pthread_mutex_destroy(&data->philosophers[i].check);
 		i++;
 	}
+	pthread_mutex_destroy(&data->print);
+	pthread_mutex_destroy(&data->check_died);
 	free(data->philosophers);
 	free(data->forks);
 	free(data);
@@ -26,10 +28,7 @@ int	main(int ac, char **av)
 	if (ac < 5)
 		return (1);
 	if (parse_data(data, av) == 1)
-	{
-		printf("here\n");
 		return 1;
-	}
 	data->start_sumilation = get_tm();
 	creat_phiolosophers(data);
 	all_free(data);
