@@ -8,23 +8,27 @@ long	get_tm(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	creat_piholosophers(t_data *data)
+void	create_philosophers(t_data *data)
 {
-	int	i;
+    int	i = 0;
+    pthread_t monitor;
 
-	i = 0;
-	while (i < data->number_of_philosophers)
-	{
-		pthread_create(&data->philosophers[i].philo, NULL, routine,
-			&data->philosophers[i]);
-		i++;
-	}
-	i = 0;
-	while (i < data->number_of_philosophers)
-	{
-		pthread_join(data->philosophers[i].philo, NULL);
-		i++;
-	}
+    data->someone_died = 0;
+    while (i < data->number_of_philosophers)
+    {
+        pthread_create(&data->philosophers[i].philo, NULL, routine,
+            &data->philosophers[i]);
+        i++;
+    }
+    pthread_create(&monitor, NULL, monitoring, data);
+
+    i = 0;
+    while (i < data->number_of_philosophers)
+    {
+        pthread_join(data->philosophers[i].philo, NULL);
+        i++;
+    }
+    pthread_join(monitor, NULL);
 }
 
 void	parse_data(t_data *data, char **av)
@@ -42,8 +46,11 @@ void	parse_data(t_data *data, char **av)
 	data->time_to_sleep = ft_atoi(av[4], &data->flag);
 	if (data->flag == 0)
 		exit((printf("Error\n check time to sleep\n"), 1));
+	if (av[5])
+		data->number_of_times_each_philosopher_must_eat = ft_atoi(av[5], &data->flag);
+	else
+		data->number_of_times_each_philosopher_must_eat = -1;
 	data->philosophers = malloc(sizeof(t_philo) * data->number_of_philosophers);
-	data->forks = malloc(sizeof(pthread_mutex_t)
-			* data->number_of_philosophers);
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->number_of_philosophers);
 	init_data_of_philo(data);
 }
