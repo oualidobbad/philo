@@ -48,5 +48,5 @@ void				all_free(t_data *data);
 void				creat_phiolosophers(t_data *data);
 int					parse_data(t_data *data, char **av);
 void				init_data_of_philo(t_data *data);
-void 				print_stat(char *str, t_philo *philo);
+void 				print_stat(char *str, t_philo *philo, int option);
 #endif

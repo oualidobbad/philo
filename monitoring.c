@@ -19,10 +19,10 @@ bool ft_is_died(t_data *data)
         pthread_mutex_unlock(&data->philosophers[i].wait);
         if (data->time_to_die < time_last_meal)
         {
-            print_stat("%ld %d died\n"OFF, &data->philosophers[i]);
             pthread_mutex_lock(&data->check_died);
             data->is_died = true;
             pthread_mutex_unlock(&data->check_died);
+            print_stat(RED"%ld %d died\n"OFF, &data->philosophers[i] , 1);
             return true;
         }
         if (data->number_of_eats != -1 && con >= data->number_of_philosophers)
@@ -42,13 +42,9 @@ void    *monitoring(void *arg)
     t_data *data;
 
     data = (t_data *)arg;
-    while (1)
+    while (!ft_is_died(data))
     {
-        if (ft_is_died(data) == true)
-        {
-            return NULL;
-        }
-        usleep(500);
+        // usleep(1000);
     }
     return NULL;
 }

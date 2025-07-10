@@ -39,17 +39,15 @@ void	init_data_of_philo(t_data *data)
 void	creat_phiolosophers(t_data *data)
 {
 	int	i;
-	pthread_t monitor;
-
+	
 	i = 0;
-	pthread_create(&monitor, NULL, monitoring, data);
 	while (i < data->number_of_philosophers)
 	{
 		pthread_create(&data->philosophers[i].philo, NULL, routine,
 			&data->philosophers[i]);
 			i++;
 	}
-	pthread_join(monitor, NULL);
+	monitoring(data);
 	i = 0;
 	while (i < data->number_of_philosophers)
 	{
