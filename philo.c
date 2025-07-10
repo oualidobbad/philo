@@ -1,5 +1,9 @@
 
 #include "philo.h"
+// #include "monitoring.c"
+// #include "routine.c"
+// #include "parsing_threads.c"
+// #include "ft_atoi.c"
 
 void	all_free(t_data *data)
 {
@@ -25,8 +29,11 @@ int	main(int ac, char **av)
 	t_data	*data;
 
 	data = malloc(sizeof(t_data));
-	if (ac < 5)
-		return (1);
+	if (ac < 5 || ac > 6)
+		{
+			printf("here\n");
+			return (1);
+		}
 	if (parse_data(data, av) == 1)
 		return 1;
 	data->start_sumilation = get_tm();

@@ -31,6 +31,7 @@ void	init_data_of_philo(t_data *data)
             data->philosophers[i].forks_right = &data->forks[i + 1];
         data->philosophers[i].last_time_to_eat = get_tm();
 		data->philosophers[i].data = data;
+		data->philosophers[i].counter = 0;
 		i++;
 	}
 }
@@ -60,6 +61,7 @@ void	creat_phiolosophers(t_data *data)
 int parse_data(t_data *data, char **av)
 {
 	data->flag = 1;
+	data->number_of_eats = -1;
 	data->number_of_philosophers = ft_atoi(av[1], &data->flag);
 	if (data->flag == 0)
 		return (printf("Error\n check number of philosophers\n"), 1);
@@ -72,6 +74,12 @@ int parse_data(t_data *data, char **av)
 	data->time_to_sleep = ft_atoi(av[4], &data->flag);
 	if (data->flag == 0)
 		return (printf("Error\n check time to sleep\n"), 1);
+	if (av[5])
+	{
+		data->number_of_eats = ft_atoi(av[5], &data->flag);
+		if (data->flag == 0)
+			return (printf("Error\n invalid nb eats\n"), 1);
+	}
 	data->philosophers = malloc(sizeof(t_philo) * data->number_of_philosophers);
 	data->forks = malloc(sizeof(pthread_mutex_t)
 			* data->number_of_philosophers);

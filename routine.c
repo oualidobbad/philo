@@ -43,7 +43,10 @@ void	eating(t_philo *philo)
 	pthread_mutex_unlock(&philo->wait);
 
 	usleep(1000 * philo->data->time_to_eat);
-
+	pthread_mutex_lock(&philo->wait);
+	philo->counter++;
+	philo->last_time_to_eat = get_tm();
+	pthread_mutex_unlock(&philo->wait);
 	pthread_mutex_unlock(philo->forks_left);
 	pthread_mutex_unlock(philo->forks_right);
 }

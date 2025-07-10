@@ -39,7 +39,7 @@ long	ft_atoi(char *nb, int *flag)
 	while (nb[i] >= '0' && nb[i] <= '9')
 	{
 		n = n * 10 + (nb[i] - 48);
-		if (n * sign > INT_MAX || n * sign < INT_MIN)
+		if (n * sign > INT_MAX || n * sign < 0)
 			*flag = 0;
 		i++;
 	}
