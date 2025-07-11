@@ -1,9 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oobbad <oobbad@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/11 12:36:56 by oobbad            #+#    #+#             */
+/*   Updated: 2025/07/11 12:37:03 by oobbad           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philo.h"
-// #include "monitoring.c"
-// #include "routine.c"
-// #include "parsing_threads.c"
-// #include "ft_atoi.c"
 
 void	all_free(t_data *data)
 {
@@ -14,7 +21,7 @@ void	all_free(t_data *data)
 
 void	all_free_and_destroy(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < data->number_of_philosophers)
@@ -34,14 +41,14 @@ int	main(int ac, char **av)
 
 	data = malloc(sizeof(t_data));
 	if (!data)
-		return (write (2, "malloc fail\n", 13), 1);
+		return (write(2, "malloc fail\n", 13), 1);
 	if (ac < 5 || ac > 6)
 	{
 		write(2, "check Argument\n", 16);
 		return (1);
 	}
 	if (parse_data(data, av) == 1)
-		return 1;
+		return (1);
 	data->start_sumilation = get_tm();
 	if (creat_phiolosophers(data))
 		return (1);

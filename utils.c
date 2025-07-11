@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oobbad <oobbad@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/11 12:36:39 by oobbad            #+#    #+#             */
+/*   Updated: 2025/07/11 12:37:47 by oobbad           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void print_stat(char *str, t_philo *philo, int option)
+void	print_stat(char *str, t_philo *philo, int option)
 {
-	bool end_simulation;
+	bool	end_simulation;
 
 	if (option == 1)
 	{
@@ -21,17 +33,20 @@ void print_stat(char *str, t_philo *philo, int option)
 	}
 	pthread_mutex_unlock(&philo->data->mutex_end_sumilation);
 }
-bool allocate_forks_threads(t_data *data)
+
+bool	allocate_forks_threads(t_data *data)
 {
 	data->philosophers = malloc(sizeof(t_philo) * data->number_of_philosophers);
 	if (!data->philosophers)
-		return false;
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->number_of_philosophers);
+		return (false);
+	data->forks = malloc(sizeof(pthread_mutex_t)
+			* data->number_of_philosophers);
 	if (!data->forks)
-		return (free (data->philosophers), free (data), false);
-	return true;
+		return (free(data->philosophers), free(data), false);
+	return (true);
 }
-void ft_usleep (t_philo *philo, int time)
+
+void	ft_usleep(t_philo *philo, int time)
 {
 	if (philo->data->time_to_die < time)
 		usleep(philo->data->time_to_die * 1000);
