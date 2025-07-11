@@ -2,24 +2,24 @@
 
 void print_stat(char *str, t_philo *philo, int option)
 {
-	bool is_died;
+	bool end_simulation;
 
 	if (option == 1)
 	{
-		pthread_mutex_lock(&philo->data->print);
+		pthread_mutex_lock(&philo->data->mutex_print);
 		printf(str, get_tm() - philo->data->start_sumilation, philo->id);
-		pthread_mutex_unlock(&philo->data->print);
+		pthread_mutex_unlock(&philo->data->mutex_print);
 		return ;
 	}
-	pthread_mutex_lock(&philo->data->check_died);
-	is_died = philo->data->is_died;
-	if (!is_died)
+	pthread_mutex_lock(&philo->data->mutex_end_sumilation);
+	end_simulation = philo->data->end_simulation;
+	if (!end_simulation)
 	{
-		pthread_mutex_lock(&philo->data->print);
+		pthread_mutex_lock(&philo->data->mutex_print);
 		printf(str, get_tm() - philo->data->start_sumilation, philo->id);
-		pthread_mutex_unlock(&philo->data->print);
+		pthread_mutex_unlock(&philo->data->mutex_print);
 	}
-	pthread_mutex_unlock(&philo->data->check_died);
+	pthread_mutex_unlock(&philo->data->mutex_end_sumilation);
 }
 bool allocate_forks_threads(t_data *data)
 {

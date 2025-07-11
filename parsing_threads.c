@@ -1,20 +1,19 @@
 #include "philo.h"
 
-void	init_data_of_philo(t_data *data)
+bool		init_data_of_philo(t_data *data)
 {
 	int	i;
 
 	i = 0;
-	data->is_died = false;
-	pthread_mutex_init(&data->print, NULL);
-	pthread_mutex_init(&data->check_died, NULL);
+	data->end_simulation = false;
+	if (pthread_mutex_init(&data->mutex_print, NULL) < 0)
+	if (pthread_mutex_init(&data->mutex_end_sumilation, NULL) < 0)
 	while (i < data->number_of_philosophers)
 		pthread_mutex_init(&data->forks[i++], NULL);
 	i = 0;
 	while (i < data->number_of_philosophers)
 	{
-		pthread_mutex_init(&data->philosophers[i].wait, NULL);
-		pthread_mutex_init(&data->philosophers[i].check, NULL);
+		pthread_mutex_init(&data->philosophers[i].mutex_of_time, NULL);
 		data->philosophers[i].id = i + 1;
 		data->philosophers[i].forks_left = &data->forks[i];
 		if (i == data->number_of_philosophers - 1)
@@ -26,6 +25,7 @@ void	init_data_of_philo(t_data *data)
 		data->philosophers[i].counter = 0;
 		i++;
 	}
+	return true;
 }
 
 int parse_data(t_data *data, char **av)
@@ -56,15 +56,21 @@ int parse_data(t_data *data, char **av)
 	return 0;
 }
 
-void	creat_phiolosophers(t_data *data)
+bool	creat_phiolosophers(t_data *data)
 {
 	int	i;
 	
 	i = 0;
 	while (i < data->number_of_philosophers)
 	{
-		pthread_create(&data->philosophers[i].philo, NULL, routine,
-			&data->philosophers[i]);
+		if (pthread_create(&data->philosophers[i].philo, NULL, routine,
+			&data->philosophers[i]) < 0)
+			{
+				while (i > -1)
+					pthread_join(data->philosophers[i--].philo, NULL);
+			all_free_and_destroy(data);
+			return (write (2, "fail pthreads create\n", 22), true);
+			}
 			i++;
 	}
 	monitoring(data);
@@ -74,4 +80,5 @@ void	creat_phiolosophers(t_data *data)
 		pthread_join(data->philosophers[i].philo, NULL);
 		i++;
 	}
+	return false;
 }

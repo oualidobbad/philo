@@ -17,13 +17,13 @@ void	eating(t_philo *philo)
 		print_stat("%ld %d has taken a fork\n", philo, 0);
 	}
 	print_stat(IS_EATING, philo, 0);
-	pthread_mutex_lock(&philo->wait);
+	pthread_mutex_lock(&philo->mutex_of_time);
 	philo->last_time_to_eat = get_tm();
-	pthread_mutex_unlock(&philo->wait);
+	pthread_mutex_unlock(&philo->mutex_of_time);
 	ft_usleep( philo ,philo->data->time_to_eat);
-	pthread_mutex_lock(&philo->wait);
+	pthread_mutex_lock(&philo->mutex_of_time);
 	philo->counter++;
-	pthread_mutex_unlock(&philo->wait);
+	pthread_mutex_unlock(&philo->mutex_of_time);
 	pthread_mutex_unlock(philo->forks_left);
 	pthread_mutex_unlock(philo->forks_right);
 }
@@ -51,15 +51,15 @@ void	start_routine(t_philo *philo)
 			usleep(1000);
 	while (1)
 	{
-		pthread_mutex_lock(&philo->data->check_died);
-		if (philo->data->is_died)
+		pthread_mutex_lock(&philo->data->mutex_end_sumilation);
+		if (philo->data->end_simulation)
 			break;
-		pthread_mutex_unlock(&philo->data->check_died);
+		pthread_mutex_unlock(&philo->data->mutex_end_sumilation);
 		eating(philo);
 		sleeping(philo);
 		thinking(philo);
 	}
-	pthread_mutex_unlock(&philo->data->check_died);
+	pthread_mutex_unlock(&philo->data->mutex_end_sumilation);
 }
 
 void	*routine(void *arg)
