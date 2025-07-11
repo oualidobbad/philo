@@ -30,10 +30,10 @@ int	main(int ac, char **av)
 
 	data = malloc(sizeof(t_data));
 	if (ac < 5 || ac > 6)
-		{
-			printf("here\n");
-			return (1);
-		}
+	{
+		write(2, "check Argument\n", 16);
+		return (1);
+	}
 	if (parse_data(data, av) == 1)
 		return 1;
 	data->start_sumilation = get_tm();

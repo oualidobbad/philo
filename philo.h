@@ -9,6 +9,13 @@
 # include <unistd.h>
 # include <stdbool.h>
 
+#define RED_BLINK "\e[1;5;31m"
+#define OFF "\e[m"
+
+#define IS_THINKING "%ld %d is thinking\n"
+#define IS_EATING "%ld %d is eating\n"
+#define IS_SLEEPING "%ld %d is sleeping\n"
+
 typedef struct s_philo
 {
 	pthread_t		philo;
@@ -44,9 +51,11 @@ void    			*monitoring(void *arg);
 long				ft_atoi(char *nb, int *flag);
 long				get_tm(void);
 void				*routine(void *arg);
+void 				ft_usleep (t_philo *philo, int time);
 void				all_free(t_data *data);
 void				creat_phiolosophers(t_data *data);
 int					parse_data(t_data *data, char **av);
 void				init_data_of_philo(t_data *data);
 void 				print_stat(char *str, t_philo *philo, int option);
+bool 				allocate_forks_threads(t_data *data);
 #endif

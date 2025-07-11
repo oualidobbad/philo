@@ -1,0 +1,22 @@
+{
+  "workbench.colorCustomizations": {
+    "editor.background": "#282828",
+    "editor.foreground": "#EBDBB2",
+    "editorCursor.foreground": "#FE8019",
+    "editor.selectionBackground": "#504945",
+    "editor.lineHighlightBackground": "#3C3836",
+    "editorLineNumber.foreground": "#7C6F64"
+  },
+  "editor.tokenColorCustomizations": {
+    "comments": "#928374",
+    "functions": "#B8BB26",
+    "keywords": "#FB4934",
+    "strings": "#B8BB26",
+    "numbers": "#D3869B",
+    "types": "#83A598",
+    "variables": "#EBDBB2"
+  },
+  "files.associations": {
+    "unistd.h": "c"
+  }
+}

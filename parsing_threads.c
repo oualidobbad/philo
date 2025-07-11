@@ -1,13 +1,5 @@
 #include "philo.h"
 
-long	get_tm(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
-
 void	init_data_of_philo(t_data *data)
 {
 	int	i;
@@ -36,6 +28,34 @@ void	init_data_of_philo(t_data *data)
 	}
 }
 
+int parse_data(t_data *data, char **av)
+{
+	data->flag = 1;
+	data->number_of_eats = -1;
+	data->number_of_philosophers = ft_atoi(av[1], &data->flag);
+	if (data->flag == 0)
+		return (write (2, "Error\n check number of philosophers\n", 37), 1);
+	data->time_to_die = ft_atoi(av[2], &data->flag);
+	if (data->flag == 0)
+		return (write (2, "Error\n check time to die\n", 26), 1);
+	data->time_to_eat = ft_atoi(av[3], &data->flag);
+	if (data->flag == 0)
+		return (write (2, "Error\n check time to eat\n", 26), 1);
+	data->time_to_sleep = ft_atoi(av[4], &data->flag);
+	if (data->flag == 0)
+		return (write(2, "Error\n check time to sleep\n", 28), 1);
+	if (av[5])
+	{
+		data->number_of_eats = ft_atoi(av[5], &data->flag);
+		if (data->flag == 0)
+			return (write (2, "Error\n invalid nb eats\n", 24), 1);
+	}
+	if (!allocate_forks_threads(data))
+		return (write (2, "fail malloc\n", 13), 1);
+	init_data_of_philo(data);
+	return 0;
+}
+
 void	creat_phiolosophers(t_data *data)
 {
 	int	i;
@@ -54,33 +74,4 @@ void	creat_phiolosophers(t_data *data)
 		pthread_join(data->philosophers[i].philo, NULL);
 		i++;
 	}
-}
-
-int parse_data(t_data *data, char **av)
-{
-	data->flag = 1;
-	data->number_of_eats = -1;
-	data->number_of_philosophers = ft_atoi(av[1], &data->flag);
-	if (data->flag == 0)
-		return (printf("Error\n check number of philosophers\n"), 1);
-	data->time_to_die = ft_atoi(av[2], &data->flag);
-	if (data->flag == 0)
-		return (printf("Error\n check time to die\n"), 1);
-	data->time_to_eat = ft_atoi(av[3], &data->flag);
-	if (data->flag == 0)
-		return (printf("Error\n check time to eat\n"), 1);
-	data->time_to_sleep = ft_atoi(av[4], &data->flag);
-	if (data->flag == 0)
-		return (printf("Error\n check time to sleep\n"), 1);
-	if (av[5])
-	{
-		data->number_of_eats = ft_atoi(av[5], &data->flag);
-		if (data->flag == 0)
-			return (printf("Error\n invalid nb eats\n"), 1);
-	}
-	data->philosophers = malloc(sizeof(t_philo) * data->number_of_philosophers);
-	data->forks = malloc(sizeof(pthread_mutex_t)
-			* data->number_of_philosophers);
-	init_data_of_philo(data);
-	return 0;
 }

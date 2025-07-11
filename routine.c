@@ -1,39 +1,5 @@
 #include "philo.h"
 
-#define IS_THINKING "%ld %d is thinking\n"
-#define IS_EATING "%ld %d is eating\n"
-#define IS_SLEEPING "%ld %d is sleeping\n"
-
-void ft_usleep (t_philo *philo, int time)
-{
-	if (philo->data->time_to_die < time)
-		usleep(philo->data->time_to_die * 1000);
-	else
-		usleep(time * 1000);
-	// usleep(1000);
-}
-void print_stat(char *str, t_philo *philo, int option)
-{
-	bool is_died;
-
-	if (option == 1)
-	{
-		pthread_mutex_lock(&philo->data->print);
-		printf(str, get_tm() - philo->data->start_sumilation, philo->id);
-		pthread_mutex_unlock(&philo->data->print);
-		return ;
-	}
-	pthread_mutex_lock(&philo->data->check_died);
-	is_died = philo->data->is_died;
-	if (!is_died)
-	{
-		pthread_mutex_lock(&philo->data->print);
-		printf(str, get_tm() - philo->data->start_sumilation, philo->id);
-		pthread_mutex_unlock(&philo->data->print);
-	}
-	pthread_mutex_unlock(&philo->data->check_died);
-}
-
 void	eating(t_philo *philo)
 {
 	if (philo->id % 2)
@@ -67,6 +33,7 @@ void	sleeping(t_philo *philo)
 	print_stat(IS_SLEEPING, philo, 0);
 	ft_usleep(philo, philo->data->time_to_sleep);
 }
+
 void	thinking(t_philo *philo)
 {
 	print_stat(IS_THINKING, philo, 0);
@@ -77,12 +44,29 @@ void	thinking(t_philo *philo)
 		usleep (2000);
 	}
 }
+
+void	start_routine(t_philo *philo)
+{
+	if (philo->id % 2)
+			usleep(1000);
+	while (1)
+	{
+		pthread_mutex_lock(&philo->data->check_died);
+		if (philo->data->is_died)
+			break;
+		pthread_mutex_unlock(&philo->data->check_died);
+		eating(philo);
+		sleeping(philo);
+		thinking(philo);
+	}
+	pthread_mutex_unlock(&philo->data->check_died);
+}
+
 void	*routine(void *arg)
 {
-	t_philo *philo = (t_philo *)arg;
-	bool is_died;
+	t_philo *philo;
 
-
+	philo = (t_philo *)arg;
 	if (philo->data->number_of_philosophers == 1)
 	{
 		pthread_mutex_lock(philo->forks_left);
@@ -90,21 +74,6 @@ void	*routine(void *arg)
 		pthread_mutex_unlock(philo->forks_left);
 	}
 	else
-	{
-		if (philo->id % 2)
-			usleep(1000);
-		while (1)
-		{
-			pthread_mutex_lock(&philo->data->check_died);
-			is_died = philo->data->is_died;
-			if (is_died)
-				break;
-			pthread_mutex_unlock(&philo->data->check_died);
-			eating(philo);
-			sleeping(philo);
-			thinking(philo);
-		}
-		pthread_mutex_unlock(&philo->data->check_died);
-	}
+		start_routine(philo);
 	return NULL;
 }
